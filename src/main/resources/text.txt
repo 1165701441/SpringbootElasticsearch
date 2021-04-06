@@ -1,0 +1,125 @@
+https://www.yiibai.com/elasticsearch/elasticsearch-getting-start.html
+创建索引并给索引赋值:http://localhost:9200/<index>/<type>/[<id>]{索引内容}
+例：
+curl -XPUT "http://localhost:9200/movies/movie/1" -d'
+{
+    "title": "The Godfather",
+    "director": "Francis Ford Coppola",
+    "year": 1972
+}'
+执行成功后返回：
+
+{
+   "_index": "movies",
+   "_type": "movie",
+   "_id": "1",
+   "_version": 1,
+   "result": "created",
+   "_shards": {
+      "total": 2,
+      "successful": 1,
+      "failed": 0
+   },
+   "created": true
+}
+
+
+查看所有索引：http://localhost:9200/_all
+
+根据索引查询索引内容：http://localhost:9200/<index>/_search
+根据索引首字母名查询索引内容：http://localhost:9200/首字母*/_search
+根据i的搜索索引内容：http://localhost:9200/<index>/<type>/<id>
+过滤索引搜索：http://localhost:9200/_search
+{
+	"query": {
+		"bool": {
+			"filter": {
+				"range": {
+					"year": {
+						"gt": 2010
+					}
+				}
+			},
+            "must":{
+                "match":{
+                    "title":"kill"
+                }
+            }
+		}
+	}
+}
+
+
+
+{"size":10,"query":{"bool":{"must":[{"match":{"last_name":{"query":"最后一个名字","operator":"OR","prefix_length":0,"max_expansions":50,"fuzzy_transpositions":true,"lenient":false,"zero_terms_query":"NONE","auto_generate_synonyms_phrase_query":true,"boost":1.0}}}],"filter":[{"range":{"age":{"from":0,"to":8899,"include_lower":true,"include_upper":true,"boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}},"explain":true,"highlight":{"pre_tags":["<span style='color:red'>"],"post_tags":["</span>"],"require_field_match":false,"fields":{"last_name":{}}}}
+基本自由文本搜索：http://localhost:9200/_search
+{
+"query": {
+   "query_string": {
+       "query": "搜索的文本内容"
+   }
+}
+}
+指定搜索的字段：http://localhost:9200/_search
+{
+"query": {
+   "query_string": {
+       "query": "搜索的文本内容",
+        "fields": ["搜索的字段"]
+   }
+}
+}
+
+
+更新索引：http://localhost:9200/<index>/<type>/[<id>]
+{
+更新索引的内容
+}
+例：
+curl -XPUT "http://localhost:9200/movies/movie/1" -d'
+{
+    "title": "The Godfather",
+    "director": "Francis Ford Coppola",
+    "year": 1972,
+    "genres": ["Crime", "Drama"]
+}'
+执行成功后返回：
+{
+    "_index": "movies",
+    "_type": "movie",
+    "_id": "1",
+    "_version": 2,
+    "result": "updated",
+    "_shards": {
+        "total": 2,
+        "successful": 1,
+        "failed": 0
+    },
+    "_seq_no": 1,
+    "_primary_term": 1
+}
+
+删除文档："http://localhost:9200/<index>/<type>/<id>
+例curl -XDELETE "http://localhost:9200/movies/movie/1" -d''
+执行成功后返回：
+{
+    "_index": "movies",
+    "_type": "movie",
+    "_id": "1",
+    "_version": 3,
+    "result": "deleted",
+    "_shards": {
+        "total": 2,
+        "successful": 1,
+        "failed": 0
+    },
+    "_seq_no": 2,
+    "_primary_term": 1
+}
+
+
+
+
+
+
+
